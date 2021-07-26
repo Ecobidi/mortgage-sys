@@ -1,0 +1,97 @@
+<%- include ('partials/top') %>
+
+<div class="row py-2">
+  <div class="col-12 text-center">
+    <h3 class="mb-3">Mortgage Payment</h3>
+  </div>
+  <% if (success_msg && success_msg.length > 0) { %>
+    <div class="col-12">
+      <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <strong><%= success_msg %></strong> 
+      </div>
+      <script>
+        $(".alert").alert();
+      </script>
+    </div>
+    <% } %>
+
+    <% if (error_msg && error_msg.length > 0) { %>
+      <div class="col-12">
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <strong><%= error_msg %></strong> 
+        </div>
+        <script>
+          $(".alert").alert();
+        </script>
+      </div>
+      <% } %>
+
+  <div class="col-12">
+    <div class="row">
+      <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+        <form action="/payments/new" method="GET">
+          <div class="form-group">
+            <input class="form-control-lg form-control" name="loan_id" placeholder="Enter Loan Reference ID ...">
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary btn-block" type="submit">Get Loan Info</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+
+    <% if (loan_found) { %> 
+    <div class="row py-3 bg-white">
+
+      <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 text-center">
+        <div class="form-group">
+          <label>Borrower's Name</label>
+          <input disabled class="form-control" value='<%= loan.borrower_name %>'>
+        </div>
+        <div class="form-group">
+          <label>Loan Amount (NGN) &#8358;)</label>
+          <input disabled class="form-control" value='<%= loan.amount %>'>
+        </div>
+        <div class="form-group">
+          <label>Loan Plan </label>
+          <input disabled class="form-control" value='<%= loan.plan.months + " months at " + loan.plan.interest + " % interest with a penalty of " + loan.plan.penalty + " %" %>'>
+        </div>
+        <form action="/payments/new" method="POST">
+          <input type="hidden" name="borrower_name" value='<%= loan.borrower_name %>'>
+          <input type="hidden" name="borrower" value='<%= loan.borrower._id %>'>
+          <input type="hidden" name="loan" value='<%= loan._id %>'>
+          <input type="hidden" name="type" value='deposit'>
+
+          <div class="form-group">
+            <label>Amount to be paid(NGN) &#8358;) </label>
+            <input class="form-control" name="amount" type="number">
+          </div>
+          <div class="form-group">
+            <label>Penalty (NGN) &#8358;)</label>
+            <input class="form-control" name="penalty" type="number">
+          </div>
+          <div class="form-group">
+            <label>Date of Payment</label>
+            <input class="form-control" name="date_of_payment" type="date">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success">Make Payment</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <% } %>
+  </div>
+
+  <div>
+</div>
+
+<%- include ('partials/bottom') %>
